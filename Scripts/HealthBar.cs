@@ -18,15 +18,15 @@ public class HealthBar : MonoBehaviour
 
     private void OnEnable()
     {
-        _health.OnHealthChanged += UpdateHealthBar;
+        _health.HealthChanged += OnHealthChanged;
     }
 
     private void OnDisable()
     {
-        _health.OnHealthChanged -= UpdateHealthBar;
+        _health.HealthChanged -= OnHealthChanged;
     }
 
-    private void UpdateHealthBar(float currentHealth)
+    private void OnHealthChanged(float currentHealth)
     {
         if (_isCoroutineEnd)
         {

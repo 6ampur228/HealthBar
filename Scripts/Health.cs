@@ -3,11 +3,12 @@ using System;
 
 public class Health : MonoBehaviour
 {
-    public event Action<float> OnHealthChanged;
 
     [SerializeField] private float _maxHealth = 100f;
 
     private float _currentHealth;
+
+    public event Action<float> HealthChanged;
 
     public float CurrentHealth => _currentHealth;
 
@@ -19,12 +20,12 @@ public class Health : MonoBehaviour
     public void Damage(float amount)
     {
         _currentHealth = Mathf.Clamp(_currentHealth - amount, 0f, _maxHealth);
-        OnHealthChanged?.Invoke(_currentHealth);
+        HealthChanged?.Invoke(_currentHealth);
     }
 
     public void Heal(float amount)
     {
         _currentHealth = Mathf.Clamp(_currentHealth + amount, 0f, _maxHealth);
-        OnHealthChanged?.Invoke(_currentHealth);
+        HealthChanged?.Invoke(_currentHealth);
     }
 }
