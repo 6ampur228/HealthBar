@@ -3,7 +3,6 @@ using System;
 
 public class Health : MonoBehaviour
 {
-
     [SerializeField] private float _maxHealth = 100f;
 
     private float _currentHealth;
