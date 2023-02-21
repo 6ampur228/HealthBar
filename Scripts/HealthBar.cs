@@ -1,17 +1,32 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
+    [SerializeField] private Health _health;
     [SerializeField] private Slider _healthBar;
 
     private Coroutine _currentCoroutine;
 
     private bool _isCoroutineEnd = true;
 
-    public void ChangeValue(float value)
+    private void Start()
+    {
+        _healthBar.value = _health.CurrentHealth;
+    }
+
+    private void OnEnable()
+    {
+        _health.OnHealthChanged += UpdateHealthBar;
+    }
+
+    private void OnDisable()
+    {
+        _health.OnHealthChanged -= UpdateHealthBar;
+    }
+
+    private void UpdateHealthBar(float currentHealth)
     {
         if (_isCoroutineEnd)
         {
@@ -20,21 +35,19 @@ public class HealthBar : MonoBehaviour
                 StopCoroutine(_currentCoroutine);
             }
 
-            _currentCoroutine = StartCoroutine(ChangeSliderValue(value));
-        }       
+            _currentCoroutine = StartCoroutine(ChangeSliderValue(currentHealth));
+        }
     }
 
-    private IEnumerator ChangeSliderValue(float value)
+    private IEnumerator ChangeSliderValue(float currentHealth)
     {
-        float endValue = _healthBar.value + value;
-
         _isCoroutineEnd = false;
 
-        if(endValue <= _healthBar.maxValue && endValue >= _healthBar.minValue)
+        if (currentHealth <= _healthBar.maxValue && currentHealth >= _healthBar.minValue)
         {
-            while (_healthBar.value != endValue)
+            while (_healthBar.value != currentHealth)
             {
-                _healthBar.value = Mathf.MoveTowards(_healthBar.value, endValue, Time.fixedDeltaTime);
+                _healthBar.value = Mathf.MoveTowards(_healthBar.value, currentHealth, Time.fixedDeltaTime);
 
                 yield return null;
             }
